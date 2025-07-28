@@ -60,11 +60,6 @@ const CampaignTable = ({ title = "Campaign Performance", dateRange, campaignStat
     setSearchTerm(e.target.value);
   };
 
-  const handleStatusFilterChange = (value) => {
-    setStatusFilter(value);
-    setCurrentPage(1); // Reset to first page on filter
-  };
-
   const handleExportCampaigns = () => {
     if (!campaignData || !campaignData.campaigns.length) {
       alert('No campaign data to export');
