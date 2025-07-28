@@ -159,18 +159,21 @@ const CampaignTable = ({ title = "Campaign Performance", dateRange, campaignStat
               className="pl-10"
             />
           </div>
-          <Select value={statusFilter} onValueChange={handleStatusFilterChange}>
-            <SelectTrigger className="w-full sm:w-[180px]">
-              <Filter className="h-4 w-4 mr-2" />
-              <SelectValue placeholder="Filter by status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Status</SelectItem>
-              <SelectItem value="active">Active</SelectItem>
-              <SelectItem value="paused">Paused</SelectItem>
-              <SelectItem value="completed">Completed</SelectItem>
-            </SelectContent>
-          </Select>
+          <div className="text-sm text-muted-foreground flex items-center">
+            {globalCampaignStatus !== 'all' && (
+              <Badge variant="secondary" className="mr-2">
+                Status: {globalCampaignStatus}
+              </Badge>
+            )}
+            {dateRange && (
+              <Badge variant="outline">
+                {dateRange.from && dateRange.to ? 
+                  `${dateRange.from.toLocaleDateString()} - ${dateRange.to.toLocaleDateString()}` :
+                  dateRange.from?.toLocaleDateString() || 'Date filtered'
+                }
+              </Badge>
+            )}
+          </div>
         </div>
 
         {loading ? (
