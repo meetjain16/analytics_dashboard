@@ -58,6 +58,21 @@ const CampaignTable = ({ title = "Campaign Performance" }) => {
     setCurrentPage(1); // Reset to first page on filter
   };
 
+  const handleExportCampaigns = () => {
+    if (!campaignData || !campaignData.campaigns.length) {
+      alert('No campaign data to export');
+      return;
+    }
+    
+    // Export current filtered/searched data
+    const timestamp = new Date().toISOString().split('T')[0];
+    const searchText = debouncedSearch ? `_filtered_${debouncedSearch}` : '';
+    const statusText = statusFilter !== 'all' ? `_${statusFilter}` : '';
+    const filename = `campaigns${searchText}${statusText}_${timestamp}.csv`;
+    
+    exportCampaignData(campaignData.campaigns, filename);
+  };
+
   const getStatusBadge = (status) => {
     const statusConfig = {
       'Active': { variant: 'default', className: 'bg-green-500 hover:bg-green-600' },
