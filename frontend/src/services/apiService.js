@@ -96,6 +96,8 @@ export const analyticsAPI = {
         per_page: params.per_page || 5,
         ...(params.search && { search: params.search }),
         ...(params.status_filter && params.status_filter !== 'all' && { status_filter: params.status_filter }),
+        ...(params.start_date && { start_date: params.start_date }),
+        ...(params.end_date && { end_date: params.end_date }),
         ...(params.sort_by && { sort_by: params.sort_by }),
         ...(params.sort_direction && { sort_direction: params.sort_direction })
       }).toString();
