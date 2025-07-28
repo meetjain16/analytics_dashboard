@@ -104,7 +104,7 @@ async def get_traffic_sources_chart():
 
 @router.post("/campaigns", response_model=CampaignListResponse)
 async def get_campaigns(request: CampaignSearchRequest):
-    """Get campaigns with search, filter, and pagination"""
+    """Get campaigns with search, filter, and pagination including date range filtering"""
     try:
         # Build query
         query = {}
@@ -116,6 +116,27 @@ async def get_campaigns(request: CampaignSearchRequest):
         # Status filter
         if request.status_filter and request.status_filter != "all":
             query["status"] = {"$regex": request.status_filter, "$options": "i"}
+        
+        # Date range filter
+        if request.start_date and request.end_date:
+            # Filter campaigns that overlap with the date range
+            start_dt = datetime.strptime(request.start_date, '%Y-%m-%d')
+            end_dt = datetime.strptime(request.end_date, '%Y-%m-%d')
+            
+            query["$or"] = [
+                {
+                    "start_date": {"$gte": request.start_date, "$lte": request.end_date}
+                },
+                {
+                    "end_date": {"$gte": request.start_date, "$lte": request.end_date}
+                },
+                {
+                    "$and": [
+                        {"start_date": {"$lte": request.start_date}},
+                        {"end_date": {"$gte": request.end_date}}
+                    ]
+                }
+            ]
         
         # Get total count
         total = await campaigns_collection.count_documents(query)
