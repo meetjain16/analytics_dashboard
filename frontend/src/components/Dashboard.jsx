@@ -258,7 +258,12 @@ const Dashboard = () => {
 
         {/* Campaign Table */}
         {campaignData.campaigns.length > 0 && (
-          <CampaignTable data={campaignData.campaigns} total={campaignData.total} />
+          <CampaignTable 
+            data={campaignData.campaigns} 
+            total={campaignData.total}
+            dateRange={dateRange}
+            campaignStatus={campaignStatus}
+          />
         )}
 
         {/* Footer */}
