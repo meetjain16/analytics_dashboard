@@ -69,8 +69,9 @@ const CampaignTable = ({ title = "Campaign Performance", dateRange, campaignStat
     // Export current filtered/searched data
     const timestamp = new Date().toISOString().split('T')[0];
     const searchText = debouncedSearch ? `_filtered_${debouncedSearch}` : '';
-    const statusText = statusFilter !== 'all' ? `_${statusFilter}` : '';
-    const filename = `campaigns${searchText}${statusText}_${timestamp}.csv`;
+    const statusText = globalCampaignStatus !== 'all' ? `_${globalCampaignStatus}` : '';
+    const dateText = dateRange ? `_${formatDateForAPI(dateRange.from)}_to_${formatDateForAPI(dateRange.to)}` : '';
+    const filename = `campaigns${searchText}${statusText}${dateText}_${timestamp}.csv`;
     
     exportCampaignData(campaignData.campaigns, filename);
   };
