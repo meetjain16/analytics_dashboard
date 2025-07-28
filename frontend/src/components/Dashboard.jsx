@@ -29,11 +29,21 @@ import {
 
 const Dashboard = () => {
   const [lastUpdated, setLastUpdated] = useState(new Date());
+  const [campaignStatus, setCampaignStatus] = useState('all');
   
-  // Use custom hooks for data fetching
-  const { metrics, loading: metricsLoading, error: metricsError, refetch: refetchMetrics } = useMetrics();
+  // Use date filter hook
+  const { dateRange, setDateRange, getDateRangeParams } = useDateFilter();
+  
+  // Get date range params for API calls
+  const dateParams = getDateRangeParams();
+  
+  // Use custom hooks for data fetching with date filtering
+  const { metrics, loading: metricsLoading, error: metricsError, refetch: refetchMetrics } = useMetrics(dateParams);
   const { chartData, loading: chartLoading, error: chartError, refetch: refetchCharts } = useChartData();
-  const { campaignData, loading: campaignsLoading, error: campaignsError, refetch: refetchCampaigns } = useCampaigns();
+  const { campaignData, loading: campaignsLoading, error: campaignsError, refetch: refetchCampaigns } = useCampaigns({
+    ...dateParams,
+    status_filter: campaignStatus
+  });
 
   const isLoading = metricsLoading || chartLoading || campaignsLoading;
   const hasError = metricsError || chartError || campaignsError;
@@ -43,6 +53,11 @@ const Dashboard = () => {
     refetchMetrics();
     refetchCharts();
     refetchCampaigns();
+  };
+
+  const handleResetFilters = () => {
+    setDateRange(null);
+    setCampaignStatus('all');
   };
 
   if (isLoading && (!metrics && !chartData.revenue.length)) {
