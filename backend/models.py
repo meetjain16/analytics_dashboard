@@ -55,6 +55,8 @@ class CampaignListResponse(BaseModel):
 class CampaignSearchRequest(BaseModel):
     search: Optional[str] = None
     status_filter: Optional[str] = None
+    start_date: Optional[str] = None
+    end_date: Optional[str] = None
     page: int = 1
     per_page: int = 5
     sort_by: Optional[str] = None
