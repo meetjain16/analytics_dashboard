@@ -8,10 +8,20 @@ import math
 router = APIRouter()
 
 @router.get("/metrics", response_model=MetricsResponse)
-async def get_metrics():
-    """Get key performance metrics"""
+async def get_metrics(
+    start_date: Optional[str] = Query(None),
+    end_date: Optional[str] = Query(None)
+):
+    """Get key performance metrics with optional date filtering"""
     try:
-        metrics = await metrics_collection.find({}).to_list(1000)
+        # Build date filter if provided
+        date_filter = {}
+        if start_date and end_date:
+            start_dt = datetime.strptime(start_date, '%Y-%m-%d')
+            end_dt = datetime.strptime(end_date, '%Y-%m-%d')
+            date_filter = {"date": {"$gte": start_dt, "$lte": end_dt}}
+        
+        metrics = await metrics_collection.find(date_filter).to_list(1000)
         
         # Transform metrics into the expected format
         result = {
