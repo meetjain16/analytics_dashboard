@@ -138,6 +138,15 @@ const Dashboard = () => {
           </p>
         </div>
 
+        {/* Advanced Filters */}
+        <AdvancedFilters
+          dateRange={dateRange}
+          onDateRangeChange={setDateRange}
+          campaignStatus={campaignStatus}
+          onCampaignStatusChange={setCampaignStatus}
+          onResetFilters={handleResetFilters}
+        />
+
         {/* Key Metrics Cards */}
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           {metrics && (
