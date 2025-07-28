@@ -9,6 +9,8 @@ from pydantic import BaseModel, Field
 from typing import List
 import uuid
 from datetime import datetime
+from database import initialize_database
+from routes.analytics import router as analytics_router
 
 
 ROOT_DIR = Path(__file__).parent
@@ -20,7 +22,7 @@ client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
 # Create the main app without a prefix
-app = FastAPI()
+app = FastAPI(title="ADmyBRAND Insights API", description="Analytics Dashboard Backend", version="1.0.0")
 
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
@@ -38,7 +40,7 @@ class StatusCheckCreate(BaseModel):
 # Add your routes to the router instead of directly to app
 @api_router.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "ADmyBRAND Insights API - Analytics Dashboard Backend"}
 
 @api_router.post("/status", response_model=StatusCheck)
 async def create_status_check(input: StatusCheckCreate):
@@ -51,6 +53,9 @@ async def create_status_check(input: StatusCheckCreate):
 async def get_status_checks():
     status_checks = await db.status_checks.find().to_list(1000)
     return [StatusCheck(**status_check) for status_check in status_checks]
+
+# Include analytics routes
+api_router.include_router(analytics_router, tags=["analytics"])
 
 # Include the router in the main app
 app.include_router(api_router)
