@@ -4,6 +4,7 @@ import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Separator } from './ui/separator';
 import { ThemeToggle } from './ThemeToggle';
+import ExportDropdown from './ExportDropdown';
 import MetricCard from './MetricCard';
 import RevenueChart from './RevenueChart';
 import UserGrowthChart from './UserGrowthChart';
