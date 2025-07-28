@@ -5,12 +5,14 @@ import { Badge } from './ui/badge';
 import { Separator } from './ui/separator';
 import { ThemeToggle } from './ThemeToggle';
 import ExportDropdown from './ExportDropdown';
+import AdvancedFilters from './AdvancedFilters';
 import MetricCard from './MetricCard';
 import RevenueChart from './RevenueChart';
 import UserGrowthChart from './UserGrowthChart';
 import TrafficSourceChart from './TrafficSourceChart';
 import CampaignTable from './CampaignTable';
 import { useMetrics, useChartData, useCampaigns } from '../hooks/useAnalytics';
+import { useDateFilter } from '../hooks/useDateFilter';
 import { 
   DollarSign, 
   Users, 
