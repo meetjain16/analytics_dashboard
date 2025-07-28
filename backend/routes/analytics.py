@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException, Query
 from typing import Optional
+from datetime import datetime, date
 from models import MetricsResponse, ChartDataResponse, CampaignListResponse, CampaignSearchRequest
 from database import metrics_collection, chart_data_collection, campaigns_collection
 import math
