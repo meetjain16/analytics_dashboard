@@ -7,6 +7,7 @@ import { Badge } from './ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Search, Filter, Download, ChevronUp, ChevronDown } from 'lucide-react';
 import { useCampaigns } from '../hooks/useAnalytics';
+import { exportCampaignData } from '../utils/exportUtils';
 
 const CampaignTable = ({ title = "Campaign Performance" }) => {
   const [searchTerm, setSearchTerm] = useState('');
