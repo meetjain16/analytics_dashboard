@@ -136,7 +136,7 @@ const CampaignTable = ({ title = "Campaign Performance" }) => {
             {title}
             <div className="h-2 w-2 rounded-full bg-orange-500 animate-pulse" />
           </div>
-          <Button variant="outline" size="sm" className="flex items-center gap-2">
+          <Button variant="outline" size="sm" onClick={handleExportCampaigns} className="flex items-center gap-2">
             <Download className="h-4 w-4" />
             Export
           </Button>
