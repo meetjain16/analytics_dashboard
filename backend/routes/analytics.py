@@ -161,15 +161,19 @@ async def get_campaigns(request: CampaignSearchRequest):
 async def get_campaigns_get(
     search: Optional[str] = Query(None),
     status_filter: Optional[str] = Query(None),
+    start_date: Optional[str] = Query(None),
+    end_date: Optional[str] = Query(None),
     page: int = Query(1),
     per_page: int = Query(5),
     sort_by: Optional[str] = Query(None),
     sort_direction: str = Query('asc')
 ):
-    """GET version of campaigns endpoint for easier frontend integration"""
+    """GET version of campaigns endpoint for easier frontend integration with date filtering"""
     request = CampaignSearchRequest(
         search=search,
         status_filter=status_filter,
+        start_date=start_date,
+        end_date=end_date,
         page=page,
         per_page=per_page,
         sort_by=sort_by,
