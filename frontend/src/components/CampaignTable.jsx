@@ -9,12 +9,11 @@ import { Search, Filter, Download, ChevronUp, ChevronDown } from 'lucide-react';
 import { useCampaigns } from '../hooks/useAnalytics';
 import { exportCampaignData } from '../utils/exportUtils';
 
-const CampaignTable = ({ title = "Campaign Performance" }) => {
+const CampaignTable = ({ title = "Campaign Performance", dateRange, campaignStatus: globalCampaignStatus }) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
   const [currentPage, setCurrentPage] = useState(1);
-  const [debouncedSearch, setDebouncedSearch] = useState('');
   const itemsPerPage = 5;
 
   // Debounce search term
@@ -27,15 +26,23 @@ const CampaignTable = ({ title = "Campaign Performance" }) => {
     return () => clearTimeout(timer);
   }, [searchTerm]);
 
-  // Use custom hook with parameters
+  // Format date range for API
+  const formatDateForAPI = (date) => {
+    if (!date) return null;
+    return date.toISOString().split('T')[0];
+  };
+
+  // Use custom hook with parameters including global filters
   const params = useMemo(() => ({
     search: debouncedSearch || undefined,
-    status_filter: statusFilter !== 'all' ? statusFilter : undefined,
+    status_filter: globalCampaignStatus !== 'all' ? globalCampaignStatus : undefined,
+    start_date: dateRange?.from ? formatDateForAPI(dateRange.from) : undefined,
+    end_date: dateRange?.to ? formatDateForAPI(dateRange.to) : undefined,
     page: currentPage,
     per_page: itemsPerPage,
     sort_by: sortConfig.key || undefined,
     sort_direction: sortConfig.direction
-  }), [debouncedSearch, statusFilter, currentPage, sortConfig]);
+  }), [debouncedSearch, globalCampaignStatus, dateRange, currentPage, sortConfig]);
 
   const { campaignData, loading, error, refetch } = useCampaigns(params);
 
