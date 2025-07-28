@@ -39,9 +39,15 @@ apiClient.interceptors.response.use(
 // Analytics API functions
 export const analyticsAPI = {
   // Get key metrics
-  getMetrics: async () => {
+  getMetrics: async (params = {}) => {
     try {
-      const response = await apiClient.get('/metrics');
+      const queryParams = new URLSearchParams({
+        ...(params.start_date && { start_date: params.start_date }),
+        ...(params.end_date && { end_date: params.end_date })
+      }).toString();
+
+      const url = queryParams ? `/metrics?${queryParams}` : '/metrics';
+      const response = await apiClient.get(url);
       return response.data;
     } catch (error) {
       console.error('Failed to fetch metrics:', error);
