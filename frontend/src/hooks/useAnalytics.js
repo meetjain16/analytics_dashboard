@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { analyticsAPI } from '../services/apiService';
 
-export const useMetrics = () => {
+export const useMetrics = (dateRangeParams = {}) => {
   const [metrics, setMetrics] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -10,7 +10,7 @@ export const useMetrics = () => {
     try {
       setLoading(true);
       setError(null);
-      const data = await analyticsAPI.getMetrics();
+      const data = await analyticsAPI.getMetrics(dateRangeParams);
       setMetrics(data);
     } catch (err) {
       setError(err.message);
@@ -21,7 +21,7 @@ export const useMetrics = () => {
 
   useEffect(() => {
     fetchMetrics();
-  }, []);
+  }, [JSON.stringify(dateRangeParams)]);
 
   return { metrics, loading, error, refetch: fetchMetrics };
 };
