@@ -9,7 +9,7 @@ import RevenueChart from './RevenueChart';
 import UserGrowthChart from './UserGrowthChart';
 import TrafficSourceChart from './TrafficSourceChart';
 import CampaignTable from './CampaignTable';
-import { metricsData, chartData, tableData } from '../data/mockData';
+import { useMetrics, useChartData, useCampaigns } from '../hooks/useAnalytics';
 import { 
   DollarSign, 
   Users, 
@@ -20,35 +20,53 @@ import {
   Download,
   Filter,
   RefreshCcw,
-  Bell
+  Bell,
+  AlertCircle
 } from 'lucide-react';
 
 const Dashboard = () => {
-  const [isLoading, setIsLoading] = useState(true);
   const [lastUpdated, setLastUpdated] = useState(new Date());
+  
+  // Use custom hooks for data fetching
+  const { metrics, loading: metricsLoading, error: metricsError, refetch: refetchMetrics } = useMetrics();
+  const { chartData, loading: chartLoading, error: chartError, refetch: refetchCharts } = useChartData();
+  const { campaignData, loading: campaignsLoading, error: campaignsError, refetch: refetchCampaigns } = useCampaigns();
 
-  useEffect(() => {
-    // Simulate loading
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1500);
-
-    return () => clearTimeout(timer);
-  }, []);
+  const isLoading = metricsLoading || chartLoading || campaignsLoading;
+  const hasError = metricsError || chartError || campaignsError;
 
   const refreshData = () => {
-    setIsLoading(true);
     setLastUpdated(new Date());
-    setTimeout(() => setIsLoading(false), 1000);
+    refetchMetrics();
+    refetchCharts();
+    refetchCampaigns();
   };
 
-  if (isLoading) {
+  if (isLoading && (!metrics && !chartData.revenue.length)) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex items-center justify-center">
         <div className="text-center space-y-4">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
           <div className="text-lg font-medium">Loading Analytics...</div>
           <div className="text-sm text-muted-foreground">Preparing your insights</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (hasError && (!metrics && !chartData.revenue.length)) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex items-center justify-center">
+        <div className="text-center space-y-4 max-w-md">
+          <AlertCircle className="h-12 w-12 text-destructive mx-auto" />
+          <div className="text-lg font-medium">Failed to Load Dashboard</div>
+          <div className="text-sm text-muted-foreground">
+            {metricsError || chartError || campaignsError}
+          </div>
+          <Button onClick={refreshData} className="mt-4">
+            <RefreshCcw className="h-4 w-4 mr-2" />
+            Try Again
+          </Button>
         </div>
       </div>
     );
@@ -75,8 +93,8 @@ const Dashboard = () => {
             <Badge variant="outline" className="text-xs">
               Last updated: {lastUpdated.toLocaleTimeString()}
             </Badge>
-            <Button variant="outline" size="sm" onClick={refreshData} className="flex items-center gap-2">
-              <RefreshCcw className="h-4 w-4" />
+            <Button variant="outline" size="sm" onClick={refreshData} disabled={isLoading} className="flex items-center gap-2">
+              <RefreshCcw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
               Refresh
             </Button>
             <Button variant="outline" size="sm" className="flex items-center gap-2">
@@ -103,58 +121,69 @@ const Dashboard = () => {
 
         {/* Key Metrics Cards */}
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          <MetricCard
-            title="Total Revenue"
-            current={metricsData.revenue.current}
-            previous={metricsData.revenue.previous}
-            change={metricsData.revenue.change}
-            target={metricsData.revenue.target}
-            format="currency"
-            icon={DollarSign}
-            className="border-l-4 border-l-green-500"
-          />
-          <MetricCard
-            title="Active Users"
-            current={metricsData.users.current}
-            previous={metricsData.users.previous}
-            change={metricsData.users.change}
-            target={metricsData.users.target}
-            format="number"
-            icon={Users}
-            className="border-l-4 border-l-blue-500"
-          />
-          <MetricCard
-            title="Conversion Rate"
-            current={metricsData.conversions.current}
-            previous={metricsData.conversions.previous}
-            change={metricsData.conversions.change}
-            target={metricsData.conversions.target}
-            format="percentage"
-            icon={Target}
-            className="border-l-4 border-l-purple-500"
-          />
-          <MetricCard
-            title="Growth Rate"
-            current={metricsData.growth.current}
-            previous={metricsData.growth.previous}
-            change={metricsData.growth.change}
-            target={metricsData.growth.target}
-            format="percentage"
-            icon={TrendingUp}
-            className="border-l-4 border-l-orange-500"
-          />
+          {metrics && (
+            <>
+              <MetricCard
+                title="Total Revenue"
+                current={metrics.revenue.current}
+                previous={metrics.revenue.previous}
+                change={metrics.revenue.change}
+                target={metrics.revenue.target}
+                format="currency"
+                icon={DollarSign}
+                className="border-l-4 border-l-green-500"
+              />
+              <MetricCard
+                title="Active Users"
+                current={metrics.users.current}
+                previous={metrics.users.previous}
+                change={metrics.users.change}
+                target={metrics.users.target}
+                format="number"
+                icon={Users}
+                className="border-l-4 border-l-blue-500"
+              />
+              <MetricCard
+                title="Conversion Rate"
+                current={metrics.conversions.current}
+                previous={metrics.conversions.previous}
+                change={metrics.conversions.change}
+                target={metrics.conversions.target}
+                format="percentage"
+                icon={Target}
+                className="border-l-4 border-l-purple-500"
+              />
+              <MetricCard
+                title="Growth Rate"
+                current={metrics.growth.current}
+                previous={metrics.growth.previous}
+                change={metrics.growth.change}
+                target={metrics.growth.target}
+                format="percentage"
+                icon={TrendingUp}
+                className="border-l-4 border-l-orange-500"
+              />
+            </>
+          )}
         </div>
 
         <Separator />
 
         {/* Charts Section */}
         <div className="grid gap-6 lg:grid-cols-2">
-          <RevenueChart data={chartData.revenue} />
-          <UserGrowthChart data={chartData.userGrowth} />
+          {chartData.revenue.length > 0 && (
+            <RevenueChart data={chartData.revenue} />
+          )}
+          {chartData.userGrowth.length > 0 && (
+            <UserGrowthChart data={chartData.userGrowth} />
+          )}
         </div>
 
         <div className="grid gap-6 lg:grid-cols-2">
-          <TrafficSourceChart data={chartData.trafficSources} />
+          {chartData.trafficSources.length > 0 && (
+            <TrafficSourceChart data={chartData.trafficSources} />
+          )}
+          
           <Card className="transition-all duration-300 hover:shadow-md">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -200,7 +229,9 @@ const Dashboard = () => {
         </div>
 
         {/* Campaign Table */}
-        <CampaignTable data={tableData} />
+        {campaignData.campaigns.length > 0 && (
+          <CampaignTable data={campaignData.campaigns} total={campaignData.total} />
+        )}
 
         {/* Footer */}
         <div className="flex items-center justify-between py-6 border-t">
