@@ -98,10 +98,11 @@ const Dashboard = () => {
               <RefreshCcw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
               Refresh
             </Button>
-            <Button variant="outline" size="sm" className="flex items-center gap-2">
-              <Download className="h-4 w-4" />
-              Export
-            </Button>
+            <ExportDropdown 
+              metrics={metrics} 
+              chartData={chartData} 
+              campaignData={campaignData} 
+            />
             <Button variant="outline" size="sm">
               <Bell className="h-4 w-4" />
             </Button>
