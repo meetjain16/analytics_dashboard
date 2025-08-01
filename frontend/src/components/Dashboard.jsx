@@ -445,7 +445,7 @@ const Dashboard = () => {
         {/* Footer */}
         <div className="flex items-center justify-between py-6 border-t">
           <div className="text-sm text-muted-foreground">
-            © 2024 ADmyBRAND Insights. Empowering digital marketing decisions.
+            © 2025 ADmyBRAND Insights. Empowering digital marketing decisions.
           </div>
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
             <Button variant="link" size="sm" className="h-auto p-0 hover:text-foreground transition-colors">
