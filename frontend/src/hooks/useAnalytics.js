@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { analyticsAPI } from '../services/apiService';
+import { metricsData, chartData, tableData } from '../data/mockData';
 
 export const useMetrics = (dateRangeParams = {}) => {
   const [metrics, setMetrics] = useState(null);
@@ -10,8 +10,9 @@ export const useMetrics = (dateRangeParams = {}) => {
     try {
       setLoading(true);
       setError(null);
-      const data = await analyticsAPI.getMetrics(dateRangeParams);
-      setMetrics(data);
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 500));
+      setMetrics(metricsData);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -40,16 +41,13 @@ export const useChartData = () => {
       setLoading(true);
       setError(null);
       
-      const [revenueData, userGrowthData, trafficSourcesData] = await Promise.all([
-        analyticsAPI.getRevenueChart(),
-        analyticsAPI.getUserGrowthChart(),
-        analyticsAPI.getTrafficSourcesChart()
-      ]);
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 500));
 
       setChartData({
-        revenue: revenueData,
-        userGrowth: userGrowthData,
-        trafficSources: trafficSourcesData
+        revenue: chartData.revenue,
+        userGrowth: chartData.userGrowth,
+        trafficSources: chartData.trafficSources
       });
     } catch (err) {
       setError(err.message);
@@ -80,8 +78,62 @@ export const useCampaigns = (params = {}) => {
       setLoading(true);
       setError(null);
       const finalParams = { ...params, ...newParams };
-      const data = await analyticsAPI.getCampaigns(finalParams);
-      setCampaignData(data);
+      
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // Filter and paginate campaigns based on params
+      let filteredCampaigns = [...tableData];
+      
+      // Search filter
+      if (finalParams.search) {
+        filteredCampaigns = filteredCampaigns.filter(campaign =>
+          campaign.campaign.toLowerCase().includes(finalParams.search.toLowerCase())
+        );
+      }
+      
+      // Status filter
+      if (finalParams.status_filter && finalParams.status_filter !== 'all') {
+        filteredCampaigns = filteredCampaigns.filter(campaign =>
+          campaign.status.toLowerCase() === finalParams.status_filter.toLowerCase()
+        );
+      }
+      
+      // Date range filter
+      if (finalParams.start_date || finalParams.end_date) {
+        filteredCampaigns = filteredCampaigns.filter(campaign => {
+          const campaignStart = new Date(campaign.startDate);
+          const startDate = finalParams.start_date ? new Date(finalParams.start_date) : null;
+          const endDate = finalParams.end_date ? new Date(finalParams.end_date) : null;
+          
+          if (startDate && campaignStart < startDate) return false;
+          if (endDate && campaignStart > endDate) return false;
+          return true;
+        });
+      }
+      
+      // Sorting
+      if (finalParams.sort_by) {
+        filteredCampaigns.sort((a, b) => {
+          const aVal = a[finalParams.sort_by];
+          const bVal = b[finalParams.sort_by];
+          const direction = finalParams.sort_direction === 'desc' ? -1 : 1;
+          return direction * (aVal > bVal ? 1 : -1);
+        });
+      }
+      
+      // Pagination
+      const page = finalParams.page || 1;
+      const perPage = finalParams.per_page || 5;
+      const startIndex = (page - 1) * perPage;
+      const paginatedCampaigns = filteredCampaigns.slice(startIndex, startIndex + perPage);
+      
+      setCampaignData({
+        campaigns: paginatedCampaigns,
+        total: filteredCampaigns.length,
+        page: page,
+        per_page: perPage
+      });
     } catch (err) {
       setError(err.message);
     } finally {

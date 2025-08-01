@@ -11,13 +11,26 @@ import {
 import { Download, FileText, BarChart3, Table } from 'lucide-react';
 import { exportMetricsData, exportChartData, exportCampaignData, generateDashboardReport } from '../utils/exportUtils';
 
-const ExportDropdown = ({ metrics, chartData, campaignData }) => {
+const ExportDropdown = ({ metrics, chartData, campaignData, onExport }) => {
+  const notify = (msg, variant = 'success') => {
+    if (onExport) {
+      onExport({
+        id: Date.now(),
+        title: 'Export Successful',
+        message: msg,
+        variant,
+        duration: 2500
+      });
+    }
+  };
+
   const handleExportMetrics = () => {
     if (!metrics) {
       alert('Metrics data not available');
       return;
     }
     exportMetricsData(metrics, `metrics_${new Date().toISOString().split('T')[0]}.csv`);
+    notify('Key metrics exported as CSV.');
   };
 
   const handleExportCharts = () => {
@@ -26,6 +39,7 @@ const ExportDropdown = ({ metrics, chartData, campaignData }) => {
       return;
     }
     exportChartData(chartData, `charts_${new Date().toISOString().split('T')[0]}.csv`);
+    notify('Chart data exported as CSV.');
   };
 
   const handleExportCampaigns = () => {
@@ -34,6 +48,7 @@ const ExportDropdown = ({ metrics, chartData, campaignData }) => {
       return;
     }
     exportCampaignData(campaignData.campaigns, `campaigns_${new Date().toISOString().split('T')[0]}.csv`);
+    notify('Campaigns exported as CSV.');
   };
 
   const handleExportReport = () => {
@@ -42,6 +57,7 @@ const ExportDropdown = ({ metrics, chartData, campaignData }) => {
       return;
     }
     generateDashboardReport(metrics, chartData, campaignData);
+    notify('Full dashboard report exported as JSON.');
   };
 
   return (

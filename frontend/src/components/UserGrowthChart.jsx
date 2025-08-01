@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { Users, TrendingUp } from 'lucide-react';
 
 const UserGrowthChart = ({ data, title = "User Growth Analysis" }) => {
   const CustomTooltip = ({ active, payload, label }) => {
@@ -29,9 +30,10 @@ const UserGrowthChart = ({ data, title = "User Growth Analysis" }) => {
   };
 
   return (
-    <Card className="transition-all duration-300 hover:shadow-md">
+    <Card className="transition-all duration-300 hover:shadow-lg hover:scale-105 group">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
+          <Users className="h-5 w-5 text-blue-500" />
           {title}
           <div className="h-2 w-2 rounded-full bg-blue-500 animate-pulse" />
         </CardTitle>

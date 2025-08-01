@@ -1,4 +1,44 @@
-# Getting Started with Create React App
+# Analytics Dashboard – Modern React (shadcn/ui, Tailwind)
+
+## ✨ Features & Requirements Checklist
+
+### 📊 Dashboard Features
+- **Overview Page** with key metrics cards (Revenue, Users, Conversions, Growth %)
+- **Interactive Charts:**
+  - Area/Line Chart (Revenue trends)
+  - Bar Chart (User growth)
+  - Pie/Donut Chart (Traffic sources)
+- **Data Table** with sorting, filtering, and pagination
+- **Responsive Design** for desktop, tablet, and mobile
+
+### 🎨 UI/UX
+- **Modern Design System:** Consistent colors, typography, spacing (Tailwind + CSS variables)
+- **Beautiful Visual Hierarchy:** Clear information architecture, card layouts, sectioning
+- **Smooth Animations:** Micro-interactions, hover effects, loading skeletons, transitions
+- **Dark/Light Mode Toggle:** Fully supported, animated, and persistent
+
+### ⚡ Technical Implementation
+- **React (CRA) + shadcn/ui + Tailwind**
+- **Mock Data Integration:** Realistic sample data for all charts, cards, and tables
+- **Component Architecture:** Reusable components (Card, Chart, Table, Button, Badge, Progress, Notification, Skeleton, FAB, etc.)
+
+### 🎁 Bonus Features
+- **Export Functionality:** PDF/CSV export
+- **Advanced Filters:** Date range, status, and search
+- **Beautiful Loading Skeletons:** Shimmer and animated placeholders
+- **Notification System:** Auto-dismiss, animated, and color-coded
+- **Floating Action Button:** Modern FAB for quick actions
+
+---
+
+## 🚀 Quick Start
+
+1. `npm install`
+2. `npm start`
+
+---
+
+## Original Create React App Instructions
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

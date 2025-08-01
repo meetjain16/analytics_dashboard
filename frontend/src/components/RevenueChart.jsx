@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts';
+import { TrendingUp, DollarSign } from 'lucide-react';
 
 const RevenueChart = ({ data, title = "Revenue Trends" }) => {
   const CustomTooltip = ({ active, payload, label }) => {
@@ -29,9 +30,10 @@ const RevenueChart = ({ data, title = "Revenue Trends" }) => {
   };
 
   return (
-    <Card className="transition-all duration-300 hover:shadow-md">
+    <Card className="transition-all duration-300 hover:shadow-lg hover:scale-105 group">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
+          <DollarSign className="h-5 w-5 text-green-500" />
           {title}
           <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
         </CardTitle>

@@ -41,7 +41,7 @@ export const exportToCSV = (data, filename = 'export.csv') => {
 
 export const exportCampaignData = (campaigns, filename = 'campaigns_export.csv') => {
   const exportData = campaigns.map(campaign => ({
-    'Campaign Name': campaign.campaign_name,
+    'Campaign Name': campaign.campaign_name || campaign.campaign,
     'Status': campaign.status,
     'Budget': campaign.budget,
     'Spent': campaign.spent,
@@ -50,10 +50,9 @@ export const exportCampaignData = (campaigns, filename = 'campaigns_export.csv')
     'Conversions': campaign.conversions,
     'CPA': campaign.cpa,
     'ROAS': campaign.roas,
-    'Start Date': campaign.start_date,
-    'End Date': campaign.end_date
+    'Start Date': campaign.start_date || campaign.startDate,
+    'End Date': campaign.end_date || campaign.endDate
   }));
-  
   exportToCSV(exportData, filename);
 };
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
+import { Globe, TrendingUp } from 'lucide-react';
 
 const TrafficSourceChart = ({ data, title = "Traffic Sources" }) => {
   const CustomTooltip = ({ active, payload }) => {
@@ -42,9 +43,10 @@ const TrafficSourceChart = ({ data, title = "Traffic Sources" }) => {
   };
 
   return (
-    <Card className="transition-all duration-300 hover:shadow-md">
+    <Card className="transition-all duration-300 hover:shadow-lg hover:scale-105 group">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
+          <Globe className="h-5 w-5 text-purple-500" />
           {title}
           <div className="h-2 w-2 rounded-full bg-purple-500 animate-pulse" />
         </CardTitle>
